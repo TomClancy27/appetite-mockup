@@ -65,6 +65,7 @@ export default function Gallery() {
                   src={image.src}
                   alt={image.alt}
                   className="w-full h-auto transition-transform duration-700 group-hover:scale-110"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
                   <p className="text-background font-medium">{image.alt}</p>

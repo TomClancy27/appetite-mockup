@@ -60,17 +60,31 @@ export const Footer = () => {
                   123 Culinary Lane, Mumbai, India
                 </span>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone size={18} className="flex-shrink-0 text-primary" />
-                <a href="tel:+919876543210" className="text-background/80 hover:text-primary transition-colors">
-                  +91 98765 43210
-                </a>
+              <li className="flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                  <Phone size={18} className="flex-shrink-0 text-primary" />
+                  <a href="tel:+919876543210" className="text-background/80 hover:text-primary transition-colors">
+                    +91 98765 43210
+                  </a>
+                </div>
+                <div className="flex items-center gap-3 ml-7">
+                  <a href="tel:+919876543211" className="text-background/80 hover:text-primary transition-colors">
+                    +91 98765 43211
+                  </a>
+                </div>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail size={18} className="flex-shrink-0 text-primary" />
-                <a href="mailto:hello@anurags.in" className="text-background/80 hover:text-primary transition-colors">
-                  hello@anurags.in
-                </a>
+              <li className="flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                  <Mail size={18} className="flex-shrink-0 text-primary" />
+                  <a href="mailto:hello@anurags.in" className="text-background/80 hover:text-primary transition-colors">
+                    hello@anurags.in
+                  </a>
+                </div>
+                <div className="flex items-center gap-3 ml-7">
+                  <a href="mailto:reservations@anurags.in" className="text-background/80 hover:text-primary transition-colors">
+                    reservations@anurags.in
+                  </a>
+                </div>
               </li>
             </ul>
           </div>

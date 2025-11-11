@@ -109,18 +109,53 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Map */}
+          {/* Map - Lazy Load */}
           <div className="card-shadow rounded-2xl overflow-hidden h-[500px] animate-slide-up">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.9404344443273!2d72.82229931490213!3d19.01858458711643!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7cec6a1d8e2b7%3A0x46a8c4e0f5b5d5b5!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1234567890123"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Restaurant location map"
-            ></iframe>
+            <div
+              id="map-placeholder-contact"
+              role="button"
+              aria-label="Load map"
+              tabIndex={0}
+              className="cursor-pointer h-full relative"
+              onClick={(e) => {
+                const target = e.currentTarget;
+                const iframe = document.createElement("iframe");
+                iframe.src =
+                  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.9404344443273!2d72.82229931490213!3d19.01858458711643!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7cec6a1d8e2b7%3A0x46a8c4e0f5b5d5b5!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1234567890123";
+                iframe.width = "100%";
+                iframe.height = "100%";
+                iframe.style.border = "0";
+                iframe.loading = "lazy";
+                iframe.referrerPolicy = "no-referrer-when-downgrade";
+                iframe.title = "Restaurant location map";
+                target.replaceWith(iframe);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.currentTarget.click();
+                }
+              }}
+            >
+              <img
+                src="/placeholder.svg"
+                alt="Map placeholder - Tap to load map"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "48px",
+                  left: "16px",
+                  color: "#6B554F",
+                  fontWeight: 600,
+                  background: "rgba(255,255,255,0.9)",
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                }}
+              >
+                Tap to load map
+              </div>
+            </div>
           </div>
         </div>
       </section>

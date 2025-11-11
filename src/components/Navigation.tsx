@@ -90,7 +90,7 @@ export const Navigation = () => {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-foreground/98 backdrop-blur-lg transition-all duration-500 md:hidden",
+          "fixed inset-0 z-40 nav-overlay transition-all duration-500 md:hidden",
           isMobileMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -103,11 +103,9 @@ export const Navigation = () => {
               key={item.path}
               to={item.path}
               className={cn(
-                "text-2xl font-serif font-medium tracking-wide transition-all duration-300 opacity-0 translate-y-4",
+                "text-2xl font-serif font-medium tracking-wide transition-all duration-300 opacity-0 translate-y-4 nav-overlay",
                 isMobileMenuOpen && "opacity-100 translate-y-0",
-                location.pathname === item.path
-                  ? "text-primary"
-                  : "text-background hover:text-primary"
+                location.pathname === item.path ? "active" : ""
               )}
               style={{
                 transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : "0ms",

@@ -40,8 +40,9 @@ export default function OurStory() {
         <div className="absolute inset-0">
           <img
             src={heroBg}
-            alt="Chef at work"
+            alt="Chef Anurag in the kitchen preparing gourmet dishes — culinary journey and heritage"
             className="w-full h-full object-cover animate-parallax"
+            loading="eager"
           />
           <div className="absolute inset-0 hero-gradient" />
         </div>
@@ -65,8 +66,9 @@ export default function OurStory() {
             <div className="relative h-[500px] rounded-2xl overflow-hidden card-shadow animate-fade-in">
               <img
                 src={heroBg}
-                alt="Chef portrait"
+                alt="Portrait of Chef Anurag — Michelin-trained chef with passion for farm-to-table cuisine"
                 className="w-full h-full object-cover blur-sm opacity-90"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-foreground/20" />
             </div>

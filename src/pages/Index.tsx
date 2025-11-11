@@ -51,8 +51,9 @@ const Index = () => {
         <div className="absolute inset-0">
           <img
             src={heroBg}
-            alt="Fine dining experience"
+            alt="Elegant fine dining table setting with gourmet cuisine — Anurag's Fine Dining restaurant ambience"
             className="w-full h-full object-cover animate-parallax"
+            loading="eager"
           />
           <div className="absolute inset-0 hero-gradient" />
         </div>
@@ -72,14 +73,9 @@ const Index = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              asChild
-              variant="premium"
-              size="lg"
-              className="text-lg px-8 py-6"
-            >
-              <Link to="/reserve">Reserve a Table</Link>
-            </Button>
+            <a href="tel:+919876543210" className="btn-primary">
+              Reserve a Table
+            </a>
             <Button
               asChild
               variant="elegant"
@@ -115,8 +111,9 @@ const Index = () => {
                 <div className="relative h-64 overflow-hidden">
                   <img
                     src={dish.image}
-                    alt={dish.name}
+                    alt={`${dish.name} — ${dish.description}`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
@@ -140,9 +137,9 @@ const Index = () => {
           </div>
 
           <div className="text-center mt-12">
-            <Button asChild variant="premium" size="lg">
-              <Link to="/menu">View Full Menu</Link>
-            </Button>
+            <Link to="/menu" className="btn-primary">
+              View Full Menu
+            </Link>
           </div>
         </div>
       </section>
@@ -207,8 +204,9 @@ const Index = () => {
             <div className="relative h-[500px] rounded-2xl overflow-hidden card-shadow animate-fade-in">
               <img
                 src={heroBg}
-                alt="Our story"
+                alt="Chef Anurag's culinary journey — interior of Anurag's Fine Dining restaurant"
                 className="w-full h-full object-cover blur-sm opacity-90"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-foreground/20" />
             </div>
@@ -224,9 +222,9 @@ const Index = () => {
               <p className="text-foreground/90 text-lg leading-relaxed mb-8">
                 Our chef-driven menu celebrates the seasons, the soil, and the soul of modern gastronomy. We invite you to join us in creating moments that linger long after the last bite—memories crafted with flavor, care, and love.
               </p>
-              <Button asChild variant="premium" size="lg">
-                <Link to="/our-story">Read Our Full Story</Link>
-              </Button>
+              <Link to="/our-story" className="btn-primary inline-block">
+                Read Our Full Story
+              </Link>
             </div>
           </div>
         </div>

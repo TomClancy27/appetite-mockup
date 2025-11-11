@@ -133,4 +133,78 @@ All colors MUST be HSL.
     content: '';
     @apply absolute left-1/2 -translate-x-1/2 w-24 h-0.5 bg-primary/30 mt-4;
   }
+
+  /* Primary CTA Button */
+  .btn-primary {
+    background: linear-gradient(90deg, #D9572D, #E86B35);
+    color: #ffffff;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 18px;
+    display: inline-block;
+    text-align: center;
+    box-shadow: 0 8px 18px rgba(217, 87, 45, 0.12);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(217, 87, 45, 0.2);
+  }
+
+  @media (max-width: 600px) {
+    .btn-primary {
+      width: calc(100% - 32px);
+      margin: 12px auto;
+      display: block;
+      font-size: 16px;
+      padding: 14px 18px;
+    }
+  }
+
+  /* Mobile Nav Overlay */
+  .nav-overlay {
+    backdrop-filter: blur(6px);
+    background-color: rgba(251, 247, 244, 0.96);
+  }
+
+  .nav-overlay a {
+    color: #3A2B28;
+    font-weight: 600;
+    text-shadow: none;
+    opacity: 1;
+    font-size: 20px;
+    padding: 18px 16px;
+    display: block;
+    min-height: 48px;
+  }
+
+  .nav-overlay .active {
+    color: #D9572D;
+    font-weight: 700;
+  }
+
+  /* Focus States for Accessibility */
+  a:focus,
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 3px solid rgba(217, 87, 45, 0.18);
+    outline-offset: 4px;
+  }
+
+  /* Form Validation */
+  .field-error {
+    color: hsl(0 84.2% 60.2%);
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  .reservation-success {
+    margin-bottom: 24px;
+  }
 }

@@ -12,22 +12,70 @@ export default function Reserve() {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
+    email: "",
     date: "",
     time: "",
     guests: "2",
+    notes: "",
   });
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const phoneRegex = /^\+91\s?\d{5}\s?\d{5}$/;
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const newErrors: Record<string, string> = {};
+
+    // Validate phone
+    if (!phoneRegex.test(formData.phone.trim())) {
+      newErrors.phone = "Please enter a valid phone like +91 98765 43210";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+
+    // Show success message
+    setShowSuccess(true);
+
+    // Send to Zapier webhook
+    try {
+      await fetch("https://hooks.zapier.com/hooks/catch/1234567/abcd12/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          date: formData.date,
+          time: formData.time,
+          guests: formData.guests,
+          notes: formData.notes,
+        }),
+      });
+      console.log("Zapier webhook fired successfully");
+    } catch (error) {
+      console.log("Zapier webhook failed, but continuing...", error);
+    }
+
     toast({
       title: "Reservation Requested",
       description: "We'll confirm your booking shortly via phone or email.",
     });
-    setFormData({ name: "", phone: "", date: "", time: "", guests: "2" });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear error when user starts typing
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: "" });
+    }
   };
 
   return (
@@ -58,7 +106,24 @@ export default function Reserve() {
                 Book Your Table
               </h2>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              {showSuccess && (
+                <div className="reservation-success">
+                  <div
+                    style={{
+                      padding: "20px",
+                      borderRadius: "12px",
+                      background: "#F7E9E5",
+                      color: "#6B554F",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Thanks! Your reservation request is received. We'll confirm within 30
+                    minutes by phone.
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} id="reservationForm" className="space-y-6">
                 {/* Name */}
                 <div>
                   <Label htmlFor="name" className="text-card-foreground mb-2 block">
@@ -73,6 +138,7 @@ export default function Reserve() {
                     placeholder="Enter your name"
                     required
                     className="h-12"
+                    aria-required="true"
                   />
                 </div>
 
@@ -82,7 +148,10 @@ export default function Reserve() {
                     Phone Number
                   </Label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                    <Phone
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                      size={18}
+                    />
                     <Input
                       type="tel"
                       id="phone"
@@ -92,8 +161,34 @@ export default function Reserve() {
                       placeholder="+91 98765 43210"
                       required
                       className="h-12 pl-11"
+                      aria-required="true"
+                      aria-invalid={!!errors.phone}
+                      aria-describedby={errors.phone ? "phone-error" : undefined}
                     />
                   </div>
+                  {errors.phone && (
+                    <div id="phone-error" className="field-error">
+                      {errors.phone}
+                    </div>
+                  )}
+                </div>
+
+                {/* Email */}
+                <div>
+                  <Label htmlFor="email" className="text-card-foreground mb-2 block">
+                    Email
+                  </Label>
+                  <Input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="your@email.com"
+                    required
+                    className="h-12"
+                    aria-required="true"
+                  />
                 </div>
 
                 {/* Date */}
@@ -102,7 +197,10 @@ export default function Reserve() {
                     Date
                   </Label>
                   <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                    <Calendar
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                      size={18}
+                    />
                     <Input
                       type="date"
                       id="date"
@@ -111,8 +209,12 @@ export default function Reserve() {
                       onChange={handleChange}
                       required
                       className="h-12 pl-11"
+                      aria-required="true"
                     />
                   </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Local time (Mumbai, IST)
+                  </p>
                 </div>
 
                 {/* Time */}
@@ -121,7 +223,10 @@ export default function Reserve() {
                     Time
                   </Label>
                   <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                    <Clock
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                      size={18}
+                    />
                     <Input
                       type="time"
                       id="time"
@@ -130,6 +235,7 @@ export default function Reserve() {
                       onChange={handleChange}
                       required
                       className="h-12 pl-11"
+                      aria-required="true"
                     />
                   </div>
                 </div>
@@ -140,7 +246,10 @@ export default function Reserve() {
                     Number of Guests
                   </Label>
                   <div className="relative">
-                    <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                    <Users
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                      size={18}
+                    />
                     <select
                       id="guests"
                       name="guests"
@@ -148,6 +257,7 @@ export default function Reserve() {
                       onChange={handleChange}
                       required
                       className="w-full h-12 pl-11 pr-4 rounded-md border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                      aria-required="true"
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                         <option key={num} value={num}>
@@ -158,9 +268,24 @@ export default function Reserve() {
                   </div>
                 </div>
 
-                <Button type="submit" variant="premium" size="lg" className="w-full">
+                {/* Notes */}
+                <div>
+                  <Label htmlFor="notes" className="text-card-foreground mb-2 block">
+                    Special Requests (Optional)
+                  </Label>
+                  <textarea
+                    id="notes"
+                    name="notes"
+                    value={formData.notes}
+                    onChange={handleChange}
+                    placeholder="Any dietary restrictions or special occasions?"
+                    className="w-full h-24 px-4 py-3 rounded-md border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                  />
+                </div>
+
+                <button type="submit" className="btn-primary w-full">
                   Confirm Reservation
-                </Button>
+                </button>
               </form>
 
               <div className="mt-8 pt-8 border-t border-border">
@@ -176,18 +301,53 @@ export default function Reserve() {
 
             {/* Map & Info */}
             <div className="space-y-8 animate-slide-up">
-              {/* Map */}
+              {/* Map - Lazy Load */}
               <div className="card-shadow rounded-2xl overflow-hidden h-[400px]">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.9404344443273!2d72.82229931490213!3d19.01858458711643!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7cec6a1d8e2b7%3A0x46a8c4e0f5b5d5b5!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1234567890123"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Restaurant location"
-                ></iframe>
+                <div
+                  id="map-placeholder"
+                  role="button"
+                  aria-label="Load map"
+                  tabIndex={0}
+                  className="cursor-pointer h-full relative"
+                  onClick={(e) => {
+                    const target = e.currentTarget;
+                    const iframe = document.createElement("iframe");
+                    iframe.src =
+                      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.9404344443273!2d72.82229931490213!3d19.01858458711643!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7cec6a1d8e2b7%3A0x46a8c4e0f5b5d5b5!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1234567890123";
+                    iframe.width = "100%";
+                    iframe.height = "100%";
+                    iframe.style.border = "0";
+                    iframe.loading = "lazy";
+                    iframe.referrerPolicy = "no-referrer-when-downgrade";
+                    iframe.title = "Restaurant location";
+                    target.replaceWith(iframe);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.currentTarget.click();
+                    }
+                  }}
+                >
+                  <img
+                    src="/placeholder.svg"
+                    alt="Map placeholder - Tap to load map"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "48px",
+                      left: "16px",
+                      color: "#6B554F",
+                      fontWeight: 600,
+                      background: "rgba(255,255,255,0.9)",
+                      padding: "8px 16px",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    Tap to load map
+                  </div>
+                </div>
               </div>
 
               {/* Opening Hours */}
@@ -198,15 +358,21 @@ export default function Reserve() {
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Monday - Thursday</span>
-                    <span className="font-semibold text-card-foreground">12:00 PM - 11:00 PM</span>
+                    <span className="font-semibold text-card-foreground">
+                      12:00 PM - 11:00 PM
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Friday - Saturday</span>
-                    <span className="font-semibold text-card-foreground">12:00 PM - 12:00 AM</span>
+                    <span className="font-semibold text-card-foreground">
+                      12:00 PM - 12:00 AM
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Sunday</span>
-                    <span className="font-semibold text-card-foreground">11:00 AM - 11:00 PM</span>
+                    <span className="font-semibold text-card-foreground">
+                      11:00 AM - 11:00 PM
+                    </span>
                   </div>
                 </div>
               </div>
